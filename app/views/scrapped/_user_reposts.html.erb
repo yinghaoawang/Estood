@@ -1,0 +1,33 @@
+<h3><% if current_user == @user %>Your<% else %><%= @user.name%>'s<% end %> reposts:</h3>
+<%= 'Total (includes deleted and not visible) reposts: ' + Repost.by_user_id.key(@user.id).count.to_s %>
+<br>
+<br>
+<% @user.reposts.reverse_each do |repost| %>
+  <% if repost.deleted || !repost.visible then next end %>
+  <% post = repost.post %>
+  <%= post.created_at %>
+  <br>
+  By <%= link_to post.user.name, controller: 'user', action: 'show', id: post.user.id, method: 'get' %>
+  <br>
+
+  <%= get_postable_visible_likes_count(post) %>
+  <% if !logged_in? %>
+    <%= 'likes' %>
+  <% elsif user_has_liked?(current_user, post) %>
+    <%= link_to 'You liked this', user_delete_like_path(like_id: get_user_postable_like_id(current_user, post)), method: 'delete' %>
+  <% else %>
+    <%= link_to 'Like', user_new_like_path(postable_id: post.id), method: 'post' %>
+  <% end %>
+
+  <% if repost.user == current_user %><%= link_to('Depost', user_delete_repost_path(repost_id: repost.id), method: 'delete') %><% end %>
+  <br>
+  <%= post.message %>
+  <br>
+  <%= post.comments.count %> comments
+  <br>
+  <!-- TODO THIS:
+  Repost Message: < %= repost.message.nil? ? 'Blank' : repost.message %>
+  <br>
+  <br>
+  -->
+<% end %>

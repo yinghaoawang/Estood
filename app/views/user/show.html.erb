@@ -1,0 +1,25 @@
+<%= stylesheet_link_tag 'timeline' %>
+<div class="timeline">
+  <div class="container timeline-container">
+    <div class="profile">
+      <h3>User Profile</h3>
+      <div class="follow">
+        <% if current_user == @user || current_user == nil %>
+        <% elsif user_is_following(current_user, @user) %>
+          <%= link_to 'Unfollow', user_unfollow_path(user_id: @user.id), method: 'delete' %>
+        <% else %>
+          <%= link_to 'Follow', user_follow_path(user_id: @user.id), method: 'post' %>
+        <% end %>
+      </div>
+      <div class="name">Name: <%= @user.name %></div>
+      <div class="email">Email: <%= @user.email %></div>
+      <div class="about">
+        About me: <%= @user.about %>
+      </div>
+    </div>
+    <%= render 'shared/user_following' %>
+    <%= render 'shared/user_followers' %>
+    <br><br>
+    <%= render 'shared/user_postables' %>
+  </div>
+</div>

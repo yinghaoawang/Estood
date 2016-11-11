@@ -1,0 +1,10 @@
+<div class="followers">
+  <h4>Followers</h4>
+  <% fcount = 0 %>
+  <% @user.followers.each do |follower_id| %>
+    <% fcount += 1 %>
+    <% follower = User.find follower_id %>
+    <%= link_to follower.name, user_path(id: follower_id), method: 'show' %>
+  <% end %>
+  <% if @user.following.count <1 %>
+</div>

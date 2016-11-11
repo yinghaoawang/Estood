@@ -1,0 +1,72 @@
+<h3><% if current_user == @user %>Your<% else %><%= @user.name%>'s<% end %> posts:</h3>
+<%= 'For admin purposes: ' %>
+<br>
+<%= 'Total posts: ' + Post.by_user_id.key(@user.id).count.to_s %>
+<br>
+<%= 'Visible posts: ' + get_user_visible_posts_count(@user).to_s %>
+<% @user.posts.reverse_each do |post| %>
+  <% if post.nil? || post.deleted || !post.visible then next end %>
+  <p>
+    <%= post.created_at %>
+    <br>
+    By <%= post.user.name ? link_to(post.user.name, { controller: 'user', action: 'show', id: post.user.id }) : 'N/A'%>
+  <br>
+
+  <%= get_postable_visible_likes_count(post) %>
+  <% if !logged_in? %>
+    <%= 'Likes' %>
+  <% elsif user_has_liked?(current_user, post) %>
+    <%= link_to 'You liked this', user_delete_like_path(like_id: get_user_postable_like_id(current_user, post)), method: 'delete' %>
+  <% else %>
+    <%= link_to 'Like', user_new_like_path(postable_id: post.id), method: 'post' %>
+  <% end %>
+
+  <%= get_post_visible_reposts_count(post) %>
+  <% if !logged_in? || post.user == current_user %>
+    <%= 'Reposts' %>
+  <% elsif user_has_reposted?(current_user, post) %>
+    <%= link_to 'You reposted this', user_delete_repost_path(repost_id: get_user_post_repost_id(current_user, post)), method: 'delete' %>
+  <% else %>
+    <%= link_to 'Repost', user_new_repost_path(post_id: post.id), method: 'post' %>
+  <% end %>
+
+  <% if post.user == current_user %><%= link_to 'Delete', user_delete_post_path(post_id: post.id), method: 'delete' %><% end %>
+    <br> <%= post.message %>
+    <br>
+    <div style="padding-left: 20px">
+      <b><%= post.comments.count %> comments:</b>
+      <br>
+      <% post.comments.each do |comment| %>
+        <% if comment.nil? || comment.deleted || !comment.visible then next end %>
+          By <%= link_to comment.user.name, { controller: 'user', action: 'show', id: comment.user.id }  %>
+
+        <%= get_postable_visible_likes_count(comment) %>
+
+        <% if !logged_in? %>
+          <%= 'likes' %>
+        <% elsif user_has_liked?(current_user, comment) %>
+          <%= link_to 'You liked this', user_delete_like_path(like_id: get_user_postable_like_id(current_user, comment)), method: 'delete' %>
+        <% else %>
+          <%= link_to 'Like', user_new_like_path(postable_id: comment.id), method: 'post' %>
+        <% end %>
+
+        <% if comment.user == current_user %>
+          <%= link_to('delete', user_delete_comment_path(comment_id: comment.id), method: 'delete') %>
+        <% end %>
+        <br>
+        <%= comment.message %>
+        <br>
+        <br>
+
+      <% end %>
+
+      <%= form_tag controller: 'user', action: 'new_comment', method: 'post', post_id: post.id do %>
+      <%= text_area_tag(:message, "", size: "28x2") %>
+      <br>
+      <%= submit_tag('Comment') %>
+    <% end %>
+    </div>
+    <br>
+    <br>
+  </p>
+<% end %>

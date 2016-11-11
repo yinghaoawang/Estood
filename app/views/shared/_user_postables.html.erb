@@ -1,0 +1,183 @@
+<div class="message-list">
+  <% @postables.reverse_each do |post| %>
+    <% post_type = post.model_name %>
+
+    <% if post_type == 'Repost' %>
+      <% p = post.post %>
+    <% elsif post_type == 'Post' %>
+      <% p = post %>
+    <% elsif post_type == 'Like' %>
+      <% p = post.postable %>
+    <% else %>
+      <!-- PROBLEM -->
+      <% p = post %>
+    <% end %>
+
+    <% if post.nil? || post.deleted || !post.visible || p.nil? || p.deleted || !p.visible %>
+      <% next %>
+    <% end %>
+    <% if post_type == 'Post' && post.user_id != @user.id %>
+      <% next %>
+    <% end %>
+    <% if post_type == 'Repost' && post.user_id != @user.id %>
+      <% next %>
+    <% end %>
+    <% if post_type == 'Like' && post.user_id != @user.id %>
+      <% next %>
+    <% end %>
+
+    <% p_type = p.model_name %>
+
+    <div class="message-item">
+      <i><b><%= post.created_at.strftime "%B %d, %Y %H:%M" + ' ' %></b></i><br>
+      <% if post_type == 'Repost' %>
+        <b><%= @user.name + ' reposted:' %></b>
+      <% elsif post_type == 'Post' %>
+        <b><%= @user.name + ' posted:' %></b>
+
+      <!-- if postable i sa like -->
+      <% elsif post_type == 'Like' %>
+        <% if p.nil? %>
+          </div><!-- .message-item -->
+          <% next %> 
+        <% end %>
+
+        <b><%= @user.name + ' liked ' %></b>
+        <% if p.model_name == 'Post' %>
+          <b><%= p.user.name + '\'s post' %></b>
+        <% elsif p.model_name == 'Repost' %>
+          <b><%= ' repost' %></b>
+        <% elsif p.model_name == 'Comment' %>
+          <b><%= ' comment' %></b>
+        <% else %>
+          <b><%= 'something broken' %></b>
+          </div><!-- .message-item -->
+          <% next %>
+        <% end %>
+        <!-- TODO THIS -->
+
+      <!-- if postable is not above -->
+      <% else %>
+        <b><%= 'Unrecognized postable' %><b>
+          </div><!-- .message-item -->
+        <% next %>
+      <% end %>
+
+      <div class="message-inner">
+        <div class="message-head clearfix">
+          <div class="user-detail">
+            <div class="avatar pull-left">
+              <%= link_to image_tag("https://ssl.gstatic.com/accounts/ui/avatar_2x.png"), controller: 'user', action: 'show', method: 'get', id: post.user.id %>
+            </div>
+
+            <span class="handle">
+              <h5><%= p.user.name %></h5>
+            </span>
+
+            <div class="post-meta">
+              <div class="asker-meta">
+                <span class="post-when">
+                  <span class="post-when-data"><%=  p.created_at.strftime "%B %d, %Y at %H:%M" %></span>
+                </span>
+
+                <span class="post-who">
+                  <span class="post-who-pad">by </span>
+                  <span class="post-who-data">
+                    <%= p.user.name ? link_to(p.user.name, { controller: 'user', action: 'show', id: p.user.id }) : 'N/A'%>
+                  </span>
+                </span>
+              </div><!-- .asker-meta -->
+
+              <div class="stat-meta">
+                <span class="post-like-data">
+                  <%= get_postable_visible_likes_count(p) %>
+                  <%= 'Likes' %>
+                </span>
+
+                <span class="post-repost-data">
+                  <% if p_type == 'Post' %>
+                    <%= get_post_visible_reposts_count(p) %>
+                    <%= 'Reposts' %>
+                  <% end %>
+                </span>
+
+                <span class="post-delete">
+                  <% if p.user == current_user %>
+                    <%= link_to 'Delete', user_delete_post_path(post_id: p.id), method: 'delete' %>
+                  <% end %>
+                </span>
+              </div><!-- .stat-meta -->
+
+              <div class="act-meta">
+                <% if p_type != 'Like' %>
+                  <% if user_has_liked?(current_user, p) %>
+                    <%= link_to 'You liked this. ', user_delete_like_path(like_id: get_user_postable_like_id(current_user, p)), method: 'delete' %>
+                  <% elsif logged_in? %>
+                    <!-- do not allow liking own post -->
+                    <% if current_user != p.user %>
+                      <%= link_to 'Like ', user_new_like_path(postable_id: p.id), method: 'post' %>
+                    <% else %>
+                      <%= 'Like ' %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+
+                <% if p_type != 'Repost' && p_type != 'Like' %>
+                  <% if user_has_reposted?(current_user, p) %>
+                    <%= link_to 'You reposted this. ', user_delete_repost_path(repost_id: get_user_post_repost_id(current_user, p)), method: 'delete' %>
+                  <% elsif logged_in? && p_type != 'Like' %>
+                    <!-- do not allow reposting own post -->
+                    <% if current_user != p.user %>
+                      <%= link_to 'Repost ', user_new_repost_path(post_id: p.id), method: 'post' %>
+                    <% else %>
+                      <%= 'Repost ' %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </div><!-- .act-meta -->
+
+            </div><!-- .post-meta -->
+          </div><!-- .user-detail -->
+        </div><!-- .message-head clearfix -->
+
+        <div class="message-content">
+          <%= p.message %>
+        </div><!-- .message-content -->
+
+
+
+        <% if false %>
+          <%= p.comments.count %> comments:
+          <% p.comments.each do |comment| %>
+            <% if comment.nil? || comment.deleted || !comment.visible then next end %>
+              By <%= link_to comment.user.name, { controller: 'user', action: 'show', id: comment.user.id }  %>
+            <%= get_postable_visible_likes_count(comment) %>
+            <% if !logged_in? %>
+              <%= 'likes' %>
+            <% elsif user_has_liked?(current_user, comment) %>
+              <%= link_to 'You liked this', user_delete_like_path(like_id: get_user_postable_like_id(current_user, comment)), method: 'delete' %>
+            <% else %>
+              <%= link_to 'Like', user_new_like_path(postable_id: comment.id), method: 'post' %>
+            <% end %>
+
+            <% if comment.user == current_user %>
+              <%= link_to('delete', user_delete_comment_path(comment_id: comment.id), method: 'delete') %>
+            <% end %>
+            <%= comment.message %>
+          <% end %>
+
+          <%= form_tag controller: 'user', action: 'new_comment', method: 'post', post_id: p.id do %>
+            <%= text_area_tag(:message, "", size: "28x2") %>
+            <%= submit_tag('Comment') %>
+          <% end %>
+        <% end %><!-- /if false -->
+
+      </div><!-- .message-inner -->
+    </div><!-- .message-item -->
+  <% end %><!-- ending each postable -->
+  <!--join date --> 
+  <div class="message-item join-date">
+    <i><b><%= @user.created_at.strftime "%B %d, %Y %H:%M" + ' ' %></b></i><br>
+    <b><%= @user.name + ' joined this awesome platform' %></b>
+  </div>
+</div><!-- .message-list -->

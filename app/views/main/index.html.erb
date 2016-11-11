@@ -1,0 +1,54 @@
+<!-- THE SIDEBAR NO GOOD
+<div class="container-fluid">
+<div class="row">
+<div class="col-sm-3 col-md-2 sidebar">
+<ul class="nav nav-sidebar">
+<li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
+<li><a href="#">Reports</a></li>
+<li><a href="#">Analytics</a></li>
+<li><a href="#">Export</a></li>
+</ul>
+<ul class="nav nav-sidebar">
+<li><a href="">Nav item</a></li>
+<li><a href="">Nav item again</a></li>
+<li><a href="">One more nav</a></li>
+<li><a href="">Another nav item</a></li>
+<li><a href="">More navigation</a></li>
+</ul>
+<ul class="nav nav-sidebar">
+<li><a href="">Nav item again</a></li>
+<li><a href="">One more nav</a></li>
+<li><a href="">Another nav item</a></li>
+</ul>
+</div>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"><div class="row placeholders"><div class="col-xs-6 col-sm-3 placeholder"></div><div class="col-xs-6 col-sm-3 placeholder"></div><div class="col-xs-6 col-sm-3 placeholder"></div><div class="col-xs-6 col-sm-3 placeholder"></div></div>
+-->
+<h1 class="page-header">Users</h1>
+<p>Generate a new user <%= link_to 'here', dev_new_path %></p>
+  <div class="table-responsive">
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>About</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each_with_index do |user, index| %>
+    <tr>
+      <td><%= index + 1 %></td>
+      <td><%= link_to user.name, controller: 'user', action: 'show', id: user.id %></td>
+      <td><%= user.email %></td>
+      <td><%= user.about %></td>
+    </tr>
+    <% end %>
+  </tbody>
+  </table>
+</div>
+<!-- SIDEBAR NO GOOD
+</div>
+</div>
+</div>
+-->

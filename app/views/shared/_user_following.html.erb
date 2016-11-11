@@ -1,0 +1,12 @@
+<div class="following">
+  <h4><%= @user.following.count %> Following</h4>
+  <% fcount = 0 %>
+  <% @user.following.each do |follower_id| %>
+    <% fcount += 1 %>
+    <% follower = User.find follower_id %>
+    <%= link_to follower.name, action: 'show', id: follower_id, method: 'get' %>
+  <% end %>
+  <% if fcount < 1 %>
+    <%= 'Not following anyone.' %>
+  <% end %>
+</div>

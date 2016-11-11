@@ -1,0 +1,21 @@
+<div class="container">
+  <h3>User Generator</h3>
+  <p>Created new user!</p>
+  <p>
+  <%= link_to 'Create another one', dev_new_path %>
+  </p>
+  <table style="width:100%">
+    <tr>
+      <td>Name</td>
+      <td>Email</td>
+      <td>Password</td>
+      <td>About</td>
+    </tr>
+    <tr>
+      <td><%= @user.name %></td>
+      <td><%= @user.email %></td>
+      <td><%= @user_pass %></td>
+      <td><%= @user.about %></td>
+    </tr>
+  </table>
+</div>
