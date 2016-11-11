@@ -1,6 +1,6 @@
 #Estood
 #####A social media platform built on RoR. Utilizes NoSQL DB CouchDB, CouchRest API, and Bootstrap 3.0.
-##https://estood.herokuapp.com/
+##*Requires CouchDB to be installed
 ###Features:
  * Users
  * Followers
