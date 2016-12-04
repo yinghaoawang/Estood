@@ -1,3 +1,6 @@
+```diff
+- Abandoned project
+```
 #Estood
 #####A social media platform built on RoR. Utilizes NoSQL DB CouchDB, CouchRest API, and Bootstrap 3.0.
 ##*Requires CouchDB to be installed
