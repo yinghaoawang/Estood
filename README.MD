@@ -42,7 +42,7 @@ A social media platform built on RoR. My first "big" project.
 ![](https://i.imgur.com/7WCQb51.png)
 
 ## User liking, following, reposting, and commenting
-![](https://i.imgur.com/pZjd3sG.png)
+![](https://i.imgur.com/KuUbV2J.png)
 
 ## Dashboard view of history
 ![](https://i.imgur.com/GmydFaH.png)
