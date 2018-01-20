@@ -1,16 +1,17 @@
 # Estood
-A social media platform built on RoR. 
+A social media platform built on RoR. My first "big" project.
 
 ### Features:
 - Implemented
     - Users
     - Followers
     - Posts
+    - Reposts
     - Likes
-- Missing
     - Post commenting
-    - Wall writing
+- Missing
     - Private messaging
+    - User and post searching
 
 ## Getting Started
   - Make sure you have these installed
@@ -18,12 +19,12 @@ A social media platform built on RoR.
     - Ruby-dev (ruby header files)
     - Ruby bundler
     - CouchDB
-    - libsqlite3-dev (sqlite3 header files)
+    - Sqlite3-dev (sqlite3 header files)
   - Install gems with `bundle install`
   - Build with `rake`
   - Start web server with `rails server`
   - Start database server with `couchdb start` (on a separate console)
-  - Go to localhost:3000/
+  - Go to `localhost:3000/`
 
 ## Build with
   - Ruby on Rails - Used in both the frontend and backend
@@ -40,8 +41,11 @@ A social media platform built on RoR.
 ## User Dashboard
 ![](https://i.imgur.com/7WCQb51.png)
 
-## User liking, following, and reposting
+## User liking, following, reposting, and commenting
 ![](https://i.imgur.com/pZjd3sG.png)
+
+## Dashboard view of history
+![](https://i.imgur.com/GmydFaH.png)
 
 # Messages from the developer about development
 ## What this is
@@ -50,11 +54,11 @@ a first web development project meant to get my feet wet. Although, I was
 happy with the product from the front end, the inner workings were just too badly
 done.
 
-## How I feel about this
-I was relatively happy with the result because it was my first time creating something
-that works using a large framework. I would have been much happier if posting was integrated.
-
 ## Post Mortem
+Overeagerness of features caused constant changes in model relationships. This
+combined with underplanning forced me to rewrite much of the code and architecture.
+
+
 Terrible modularity led to an extremely sloppy codebase. Even though I wrote the
 entire project by myself, I was struggling to understand much of the code which made
 adding and fixing features increasingly harder as the project got bigger.
@@ -66,6 +70,7 @@ used with the CouchRest API was very "hacky" in order to combat the weaknesses o
 the API.
 
 #### Lessons Learned: 
-    1. Put more time and effort into selecting which DBs and APIs to utilize.
-    2. The importance of modularity, even in something as high level as RoR.
-    3. Come up with OOP design before creating the models
+    1. Create a minimum viable product before trying to change model relationships.
+    2. Put more time and effort into selecting which DBs and APIs to utilize.
+    3. The importance of modularity, even in something as high level as RoR.
+    4. Come up with relationships before creating the models
