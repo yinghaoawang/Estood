@@ -39,13 +39,10 @@ A social media platform built on RoR. My first "big" project.
 ![](https://i.imgur.com/qUVFRKj.png)
 
 ## User Dashboard
-![](https://i.imgur.com/7WCQb51.png)
+![](https://i.imgur.com/QM6qS37.png)
 
 ## User liking, following, reposting, and commenting
 ![](https://i.imgur.com/KuUbV2J.png)
-
-## Dashboard view of history
-![](https://i.imgur.com/GmydFaH.png)
 
 # Messages from the developer about development
 ## What this is
